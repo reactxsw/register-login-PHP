@@ -25,12 +25,17 @@
 
         if (count($errors) == 0) {
             $password = md5($password);
-            $query = "SELECT * FROM user WHERE username = '$username' AND password = '$password'";
+            $query = "SELECT id, username, displayname, email FROM user WHERE username = '$username' AND password = '$password'";
             $result = mysqli_query($connect, $query);
 
             if (mysqli_num_rows($result) == 1) {
-                $_SESSION['username'] = $username;
+                while ($row =mysql_fetch_assoc($result)){
+                    $_SESSION['username'] = $row["username"];
+                    $_SESSION['displayname'] = $row["displayname"];
+                    $_SESSION["id"] = $row["id"];
+                }
                 $_SESSION['success'] = "Your are now logged in";
+                
                 header("location: index.php");
             } else {
                 array_push($errors, "Wrong Username or Password");
