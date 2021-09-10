@@ -6,28 +6,38 @@
 
     if (isset($_POST['setting'])) {
         unset($_SESSION['error']);
-        $current_username = mysqli_real_escape_string($connect, $_SESSION['username']);
-        $username = mysqli_real_escape_string($connect, $_POST['username']);
-        if (empty($username)) {
-            array_push($errors, "Username is required");
-            $_SESSION['error'] = "Username is required";
+        $username = $_SESSION['username'];
+        $displayname = mysqli_real_escape_string($connect, $_POST['displayname']);
 
+        $query = mysqli_query($connect, "SELECT * FROM user WHERE displayname = '$displayname' LIMIT 1");
+        $result = mysqli_fetch_assoc($query);
+        if (($result) && ($_SESSION["displayname"] != $displayname)) {
+            array_push($errors, "name already exists");
+            $_SESSION['error'] = "name already exists";
+            echo "saved";
+
+        }
+        $directory = "assets/img/profile/";
+        $filename = 'm'.$_SESSION["id"].'.png';
+        $target_file = $directory.$filename; 
+
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $resize = new ResizeImage($target_file);
+            $resize->resizeTo(125, 125, 'exact');
+            $resize->saveImage($filename);
+        
         } else {
-            $query = mysqli_query($connect, "SELECT * FROM user WHERE username = '$username' LIMIT 1");
-            $result = mysqli_fetch_assoc($query);
-            if ($result) {
-                array_push($errors, "Username already exists");
-                $_SESSION['error'] = "Username already exists";
-
-            }
+            array_push($errors, "Unable to upload image");
+            $_SESSION['error'] = "Unable to upload image";
         }
 
         if (count($errors) == 0) {
+            echo "saved";
             $password = md5($password);
-            $sql = "UPDATE user SET displayname='$username' WHERE username='$current_username'";
+            $sql = "UPDATE user SET displayname='$displayname' WHERE username='$username'";
             if (mysqli_query($connect, $sql)) {
                 echo "Record updated successfully";
-                $_SESSION['username'] = $username;
+                $_SESSION['displayname'] = $displayname;
                 $_SESSION['success'] = "You are now logged in";
                 header('location: setting.php');
             } else {
@@ -39,4 +49,5 @@
             header("location: setting.php");
         }
     }
+
 ?>
