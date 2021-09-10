@@ -30,8 +30,12 @@
          <label>
             <h2 class="header">Setting</h2>
             <div class="setting">Username</div>
-            <input type="text" class = "setting" name="username" value="<?php echo $_SESSION["username"];?>"/>
-         </label>   
+            <input type="text" class = "setting" name="displayname" value="<?php echo $_SESSION["displayname"];?>"/>
+         </label>  
+         <br>
+         <label>
+            <input type="file" name="image"/> 
+         </label> 
          <?php if (isset($_SESSION['error'])) : ?>
          <div class="error">
             <?php 
@@ -45,5 +49,6 @@
          </div>
          <p><a href="index.php">Home</a></p>
       </form>
+      
    </body>
 </html>
