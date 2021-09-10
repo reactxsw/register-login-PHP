@@ -12,7 +12,7 @@
         $password = mysqli_real_escape_string($connect, $_POST['password']);
         $password_cornfirm = mysqli_real_escape_string($connect, $_POST['password_confirm']);
 
-        if (isset($_POST['submit']) ) {
+        if(isset($_POST['h-captcha-response']) && !empty($_POST['h-captcha-response'])){
             $data = array(
                 'secret' => "0xEe6aE2ae3931Bd7b6FA2a17490EF89f632fF587D",
                 'response' => $_POST['h-captcha-response']
@@ -25,8 +25,12 @@
             $response = curl_exec($ch);
             $responseData = json_decode($response);
             if(!$responseData->success) {
-                echo 'Robot verification failed, please try again.';
-            }
+                array_push($errors, "verification failed, please try again");
+                $_SESSION['error'] = "verification failed, please try again";
+            }   
+        } else {
+            array_push($errors, "Captcha is required");
+            $_SESSION['error'] = "Captcha is required";
         }
 
         if (empty($password)) {
