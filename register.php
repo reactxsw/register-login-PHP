@@ -25,8 +25,9 @@
             <input type="text" class = "register" name="email">
          </label>
          <label>
-             <div class="register">password</div>
+            <div class="register">password</div>
             <input type="password" class = "register"  name="password">
+            <span id="pwdMeter" class="neutral"></span>
          </label>
          <label>
             <div class="register">corfirm password</div>
@@ -47,5 +48,15 @@
          </div>
          <p>Already a member? <a href="login.php">Sign in</a></p>
       </form>
+      <script type="text/javascript" src="jquery-1.8.0.min.js"></script>
+      <script type="text/javascript" src="jquery.pwdMeter.js"></script>
+      <script type="text/javascript">
+      $(document).ready(function(){
+
+            $("#password").pwdMeter();
+
+         });
+      </script>
+
    </body>
 </html>
