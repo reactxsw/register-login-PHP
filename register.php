@@ -1,62 +1,54 @@
-<?php 
-   session_start();
-   include('server.php'); 
-   ?>
+<?php
+session_start();
+include ('server.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Register Page</title>
-      <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
       <script src="https://hcaptcha.com/1/api.js" async defer></script>
    </head>
    <body>
-      <form action="register_db.php" method="post">
-         <?php include('error.php'); ?>
+   <div class="container">
+      <form action="register_db.php" method="post" autocomplete="off">
+         <?php include ('error.php'); ?>
          <div class="container">
-         <label>
-            <h2 class="header">Register</h2>
-            <div class="register">Username</div>
-            <input type="text" class = "register" name="username">
-         </label>
-         <label>
-            <div class="register">Email</div>
-            <input type="text" class = "register" name="email">
-         </label>
-         <label>
-            <div class="register">password</div>
-            <input type="password" class = "register"  name="password">
-            <span id="pwdMeter" class="neutral"></span>
-         </label>
-         <label>
-            <div class="register">corfirm password</div>
-            <input type="password" class = "register"  name="password_confirm">
-         </label>
-            <div class="h-captcha" data-sitekey="9786a494-a34e-4b7f-ad50-487eeee47f7e"></div>
-            
-         <?php if (isset($_SESSION['error'])) : ?>
+         <h1 class="mt-5">Register</h1>
+         <hr>
+         <div class="col-md-4">
+            <label for="username" class="col-sm-2 control-label">Username</label>
+            <input type="text" class="form-control" name="username" placeholder="Username" autocomplete="off">
+         </div>
+         <div class="col-md-4">
+            <label for="email" class="col-sm-2 control-label">Email</label>
+            <input type="text" class="form-control" name="email" placeholder="Email" autocomplete="off">
+         </div>
+         <div class="col-md-4">
+            <label for="password" class="col-sm-2 control-label">Password</label>
+            <input type="password" class = "form-control" name="password" placeholder="Password" autocomplete="off">
+         </div>
+         <div class="col-md-4">
+            <label for="password" class="col-sm-2 control-label">Password</label>
+            <input type="password" class = "form-control" name="password_confirm" placeholder="Confirm password" autocomplete="off">
+         </div>
+         <div class="h-captcha" data-sitekey="9786a494-a34e-4b7f-ad50-487eeee47f7e"></div>
+         <?php if (isset($_SESSION['error'])): ?>
          <div class="error">
-            <?php 
-               echo '<span style="color:red;">'.$_SESSION['error']."</span>";
-               unset($_SESSION['error']);
-               ?>
+            <?php
+    echo '<span style="color:red;">' . $_SESSION['error'] . "</span>";
+    unset($_SESSION['error']);
+?>
          </div>
-         <?php endif ?>
-         <div class="input-group">
-            <button type="submit" name="register" value="Submit" >Register</button>
-         </div>
-         <p>Already a member? <a href="login.php">Sign in</a></p>
+         <?php
+endif
+?>
+
+         <button type="submit" name="register" class="btn btn-success">Register</button>
+         <p>Already a member? <a href="login.php" class="text-decoration-none">Sign in</a></p>
       </form>
-      <script type="text/javascript" src="jquery-1.8.0.min.js"></script>
-      <script type="text/javascript" src="jquery.pwdMeter.js"></script>
-      <script type="text/javascript">
-      $(document).ready(function(){
-
-            $("#password").pwdMeter();
-
-         });
-      </script>
-
+         </div>
    </body>
 </html>
