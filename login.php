@@ -36,7 +36,7 @@ include ('server.php');
             </div>
         <?php
 endif ?>
-        
+        <br>
         <button type="submit" name="login_user" class="btn btn-success">Login</button>
         <p>Not yet a member? <a href="register.php" class="text-decoration-none">Sign Up</a></p>
     </form>
