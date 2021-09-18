@@ -10,6 +10,8 @@ if (isset($_POST['register']))
     $email = mysqli_real_escape_string($connect, $_POST['email']);
     $password = mysqli_real_escape_string($connect, $_POST['password']);
     $password_cornfirm = mysqli_real_escape_string($connect, $_POST['password_confirm']);
+    $surname = mysqli_real_escape_string($connect, $_POST["surname"]);
+    $firstname = mysqli_real_escape_string($connect, $_POST["firstname"]);
 
     if (isset($_POST['h-captcha-response']) && !empty($_POST['h-captcha-response']))
     {
@@ -29,112 +31,129 @@ if (isset($_POST['register']))
             array_push($errors, "verification failed, please try again");
             $_SESSION['error'] = "verification failed, please try again";
         }
-    }
+    } 
     else
     {
         array_push($errors, "Captcha is required");
         $_SESSION['error'] = "Captcha is required";
     }
-}
 
-if (empty($password))
-{
-    array_push($errors, "Password is required");
-    $_SESSION['error'] = "Password is required";
-}
-else
-{
-    if (strlen($password) < 8)
+    if (empty($firstname)) 
     {
-        array_push($errors, "Password must be atleast 8 letters");
-        $_SESSION['error'] = "Password must be atleast 8 letters";
+        array_push($errors, "Firstname is required");
+        $_SESSION['error'] = "Firstname is required";
     }
-}
-
-if (empty($password_cornfirm))
-{
-    array_push($errors, "Confirm your password");
-    $_SESSION['error'] = "Confirm your password";
-}
-
-if (!empty($password_cornfirm) && ($password != $password_cornfirm))
-{
-    array_push($errors, "The two passwords do not match");
-    $_SESSION['error'] = "The two passwords do not match";
-}
-
-if (empty($email))
-{
-    array_push($errors, "Email is required");
-    $_SESSION['error'] = "Email is required";
-
-}
-else
-{
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+    if (empty($surname)) 
     {
-        array_push($errors, "Invalid email");
-        $_SESSION['error'] = "Invalid email";
+        array_push($errors, "Surname is required");
+        $_SESSION['error'] = "Surname is required";
+    }
+
+    if (empty($password))
+    {
+        array_push($errors, "Password is required");
+        $_SESSION['error'] = "Password is required";
     }
     else
     {
-        $query = mysqli_query($connect, "SELECT * FROM user WHERE email = '$email' LIMIT 1");
-        $result = mysqli_fetch_assoc($query);
-        if ($result)
+        if (strlen($password) < 8)
         {
-            array_push($errors, "email already exists");
-            $_SESSION['error'] = "email already exists";
-
+            array_push($errors, "Password must be atleast 8 letters");
+            $_SESSION['error'] = "Password must be atleast 8 letters";
         }
     }
-}
 
-if (empty($username))
-{
-    array_push($errors, "Username is required");
-    $_SESSION['error'] = "Username is required";
-}
-else
-{
-    if (strlen($username) > 28)
+    if (empty($password_cornfirm))
     {
-        array_push($errors, "Username cannot be longer than 28 letters");
-        $_SESSION['error'] = "Username cannot be longer than 28 letters";
+        array_push($errors, "Confirm your password");
+        $_SESSION['error'] = "Confirm your password";
+    }
+
+    if (!empty($password_cornfirm) && ($password != $password_cornfirm))
+    {
+        array_push($errors, "The two passwords do not match");
+        $_SESSION['error'] = "The two passwords do not match";
+    }
+
+    if (empty($email))
+    {
+        array_push($errors, "Email is required");
+        $_SESSION['error'] = "Email is required";
+
     }
     else
     {
-        $query = mysqli_query($connect, "SELECT * FROM user WHERE username = '$username' LIMIT 1");
-        $result = mysqli_fetch_assoc($query);
-        if ($result)
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            array_push($errors, "Username already exists");
-            $_SESSION['error'] = "Username already exists";
+            array_push($errors, "Invalid email");
+            $_SESSION['error'] = "Invalid email";
         }
+        else
+        {
+            $query = mysqli_query($connect, "SELECT * FROM user WHERE email = '$email' LIMIT 1");
+            $result = mysqli_fetch_assoc($query);
+            if ($result)
+            {
+                array_push($errors, "email already exists");
+                $_SESSION['error'] = "email already exists";
 
+            }
+        }
     }
 
+    if (empty($username))
+    {
+        array_push($errors, "Username is required");
+        $_SESSION['error'] = "Username is required";
+    }
+    else
+    {
+        if (strlen($username) > 28)
+        {
+            array_push($errors, "Username cannot be longer than 28 letters");
+            $_SESSION['error'] = "Username cannot be longer than 28 letters";
+        }
+        else
+        {
+            $query = mysqli_query($connect, "SELECT * FROM user WHERE username = '$username' LIMIT 1");
+            $result = mysqli_fetch_assoc($query);
+            if ($result)
+            {
+                array_push($errors, "Username already exists");
+                $_SESSION['error'] = "Username already exists";
+            }
+
+        }
+    }
     if (!count($errors) > 0)
-    {
+    {   
+        $displayname = $firstname." ".$surname;
         $password = md5($password);
-        $sql = "INSERT INTO user (username, displayname, email, password, profile) VALUES ('$username', '$username', '$email', '$password', 'blank')";
-        if ($sql)
+        $sql = "INSERT INTO user (firstname, surname, username, displayname, email, password, profile, background, permission) VALUES ('$firstname', '$surname', '$username', '$displayname', '$email', '$password', 'blank', 'blank', 'member')";
+        $insert = mysqli_query($connect, $sql);
+        if ($insert)
         {
-            mysqli_query($connect, $sql);
             $last_id = mysqli_insert_id($connect);
             $_SESSION['username'] = $username;
-            $_SESSION['displayname'] = $username;
+            $_SESSION['displayname'] = $displayname;
+            $_SESSION["bio"] = " ";
+            $_SESSION["permission"] = "member";
             $_SESSION['profile'] = "blank";
+            $_SESSION['background'] = "blank";
             $_SESSION['id'] = $last_id;
-            echo $_SESSION["profile"];
             header('location: index.php');
 
         }
         else
-        {
+        {   
+            $_SESSION['error'] = mysqli_error($connect);
             header("location: register.php");
         }
 
+    } 
+    else
+    {
+        header("location: register.php");
     }
 }
-
 ?>
