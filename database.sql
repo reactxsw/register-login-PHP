@@ -13,5 +13,3 @@ CREATE TABLE user (
     rank varchar(10) NOT NULL,
     regdate timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
-    
-    
