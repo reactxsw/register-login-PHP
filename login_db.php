@@ -32,7 +32,7 @@ if (isset($_POST['login_user']))
     if (count($errors) == 0)
     {
         $password = md5($password);
-        $query = "SELECT id, username, displayname, email, profile FROM user WHERE username = '$username' AND password = '$password'";
+        $query = "SELECT id, username, displayname, email, profile, background, bio, permission FROM user WHERE username = '$username' AND password = '$password'";
         $result = mysqli_query($connect, $query);
 
         if (mysqli_num_rows($result) == 1)
@@ -43,6 +43,11 @@ if (isset($_POST['login_user']))
                 $_SESSION['displayname'] = $row["displayname"];
                 $_SESSION["id"] = $row["id"];
                 $_SESSION["profile"] = $row["profile"];
+                $_SESSION["bio"] = $row["bio"];
+                $_SESSION["rank"] = $row["rank"];
+                $_SESSION["background"] = $row["background"];
+                $_SESSION["permission"] = $row["permission"];
+
             }
 
             header("location: index.php");
