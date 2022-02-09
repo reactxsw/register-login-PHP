@@ -10,8 +10,6 @@ if (isset($_POST['register']))
     $email = mysqli_real_escape_string($connect, $_POST['email']);
     $password = mysqli_real_escape_string($connect, $_POST['password']);
     $password_cornfirm = mysqli_real_escape_string($connect, $_POST['password_confirm']);
-    $surname = mysqli_real_escape_string($connect, $_POST["surname"]);
-    $firstname = mysqli_real_escape_string($connect, $_POST["firstname"]);
 
     if (isset($_POST['h-captcha-response']) && !empty($_POST['h-captcha-response']))
     {
@@ -36,17 +34,6 @@ if (isset($_POST['register']))
     {
         array_push($errors, "Captcha is required");
         $_SESSION['error'] = "Captcha is required";
-    }
-
-    if (empty($firstname)) 
-    {
-        array_push($errors, "Firstname is required");
-        $_SESSION['error'] = "Firstname is required";
-    }
-    if (empty($surname)) 
-    {
-        array_push($errors, "Surname is required");
-        $_SESSION['error'] = "Surname is required";
     }
 
     if (empty($password))
@@ -127,9 +114,9 @@ if (isset($_POST['register']))
     }
     if (!count($errors) > 0)
     {   
-        $displayname = $firstname." ".$surname;
+        $displayname = $username
         $password = md5($password);
-        $sql = "INSERT INTO user (firstname, surname, username, displayname, email, password, profile, background, permission) VALUES ('$firstname', '$surname', '$username', '$displayname', '$email', '$password', 'blank', 'blank', 'member')";
+        $sql = "INSERT INTO user (username, displayname, email, password, profile, background, permission) VALUES ('$username', '$displayname', '$email', '$password', 'blank', 'blank', 'member')";
         $insert = mysqli_query($connect, $sql);
         if ($insert)
         {
